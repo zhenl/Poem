@@ -26,11 +26,11 @@ namespace Poem.Controllers
         private readonly string _externalCookieScheme;
 
         public AccountController(
-            UserManager<ApplicationUser> userManager,
+            
             SignInManager<ApplicationUser> signInManager,
             IOptions<IdentityCookieOptions> identityCookieOptions,
             IEmailSender emailSender,
-            ISmsSender smsSender,
+            ISmsSender smsSender, UserManager<ApplicationUser> userManager,
             ILoggerFactory loggerFactory)
         {
             _userManager = userManager;
