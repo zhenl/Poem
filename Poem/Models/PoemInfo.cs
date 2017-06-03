@@ -12,10 +12,9 @@ namespace Poem.Models
     public class PoemInfo
     {
         [Key]
-        [Column("PeomId")]
         public int PoemId { get; set; }
 
-        [Column("PeotID")]
+        [Column("PoetID")]
         public int PoetId { get; set; }
 
         public string Title { get; set; }

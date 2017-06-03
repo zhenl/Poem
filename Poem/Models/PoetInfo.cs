@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Poem.Models
 {
-    [Table(name: "Peot")]
+    [Table(name: "Poet")]
     public class PoetInfo
     {
         public PoetInfo()
@@ -15,7 +15,6 @@ namespace Poem.Models
             //this.Poems=new HashSet<PoemInfo>();
         }
         [Key]
-        [Column("PeotID")]
         public int PoetId { get; set; }
 
         public string Name { get; set; }
