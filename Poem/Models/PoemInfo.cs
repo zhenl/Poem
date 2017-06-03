@@ -8,7 +8,7 @@ using Poem.Data;
 
 namespace Poem.Models
 {
-    [Table(name: "Peom")]
+    [Table(name: "Poem")]
     public class PoemInfo
     {
         [Key]
