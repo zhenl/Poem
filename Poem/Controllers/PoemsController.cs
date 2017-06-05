@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Poem.Data;
 using Poem.Models;
@@ -12,6 +13,7 @@ namespace Poem.Controllers
 {
     [Route("api/[controller]")]
     [Route("api/[controller]/[action]")]
+    [Authorize]
     public class PoemsController : Controller
     {
         private PoemDbContext _dbContext;
