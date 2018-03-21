@@ -1,10 +1,11 @@
-@model IEnumerable<PoemInfo>
+@using System.Collections.Generic
+@model System.Collections.Generic.IEnumerable<PoemInfo>
 
 This is poems
 
 <ul>
     @foreach (var p in Model)
     {
-        <li>@($"{p.Poet.Name} {p.Title}")</li>
+        <li>@($" {p.Title}")</li>
     }
 </ul>

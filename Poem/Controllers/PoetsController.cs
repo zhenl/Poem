@@ -14,7 +14,7 @@ namespace Poem.Controllers
 {
     [Route("api/[controller]")]
     [Route("api/[controller]/[action]")]
-    [Authorize]
+    //[Authorize]
     public class PoetsController : Controller
     {
         private PoemDbContext _dbContext;
@@ -51,14 +51,52 @@ namespace Poem.Controllers
             return poet;
         }
 
-        //// GET api/Poets/GetPoemsByAuthor/李白
-        //[HttpGet("{name}")]
-        //[ActionName("GetPoemsByAuthor")]
-        //public IEnumerable<PoemInfo> GetPoemsByAuthor(string name)
-        //{
-        //    var poet = _dbContext.Poets.FirstOrDefault(p => p.Name == name);
-        //   // _dbContext.Entry(poet).Collection(p => p.Poems).Load();
-        //    return poet.Poems;
-        //}
+        // GET api/Poets/GetPoemsByAuthor/李白
+        [HttpGet("{name}")]
+        [ActionName("GetPoemsByAuthor")]
+        public IEnumerable<PoemInfo> GetPoemsByAuthor(string name)
+        {
+            var poet = _dbContext.Poets.FirstOrDefault(p => p.Name == name);
+            var Poems = from p in _dbContext.Poems where p.PoetId == poet.PoetId select p;
+            
+            return Poems;
+        }
+
+        [HttpGet("{name}")]
+        [ActionName("GetPoemsByAuthorCondition")]
+        public PagedPoems GetPoemsByAuthor(string name,int pagesize,int index,string filter)
+        {
+            var poet = _dbContext.Poets.FirstOrDefault(p => p.Name == name);
+            var Poems = from p in _dbContext.Poems where p.PoetId == poet.PoetId select p;
+            if (!string.IsNullOrEmpty(filter))
+            {
+                Poems=from p in Poems where p.Title.Contains(filter) select p;
+            }
+
+            var ps = pagesize;
+            if (ps <= 0)
+            {
+                ps = 50;
+            }
+
+            PagedPoems res = new PagedPoems();
+            res.CurrentPage = index;
+            res.PageSize = ps;
+            res.Total = Poems.Count();
+
+            res.Poems = Poems.Skip(index * ps).Take(ps);
+            return res;
+        }
+
+        // GET api/Poets/GetPoemsByAuthor/李白
+        [HttpGet("{name}/{title}")]
+        [ActionName("GetPoemsByAuthorTitle")]
+        public IEnumerable<PoemInfo> GetPoemsByAuthor(string name,string title)
+        {
+            var poet = _dbContext.Poets.FirstOrDefault(p => p.Name == name);
+            var Poems = from p in _dbContext.Poems where p.PoetId == poet.PoetId && p.Title.Contains(title) select p;
+            // _dbContext.Entry(poet).Collection(p => p.Poems).Load();
+            return Poems;
+        }
     }
 }
