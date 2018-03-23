@@ -24,10 +24,28 @@ namespace Poem.Controllers
         }
         // GET: api/Poets
         [HttpGet]
-        public IEnumerable<PoetInfo> Get()
+        public PagedPoets Get(int pagesize, int index, string filter)
         {
+
+            var poets =from p in _dbContext.Poets select p;
+            if (!string.IsNullOrEmpty(filter))
+            {
+                poets = from p in poets where p.Name.Contains(filter) select p;
+            }
             
-            return _dbContext.Poets.ToList();
+            var ps = pagesize;
+            if (ps <= 0)
+            {
+                ps = 50;
+            }
+
+            var res = new PagedPoets();
+            res.CurrentPage = index;
+            res.PageSize = ps;
+            res.Total = poets.Count();
+
+            res.Poets = poets.Skip(index * ps).Take(ps);
+            return res;
         }
 
         // GET api/Poets/5

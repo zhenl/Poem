@@ -43,5 +43,31 @@ namespace Poem.Controllers
             var poet = _dbContext.Poets.FirstOrDefault(p => p.Name == name);
             return _dbContext.Poems.Where(p => p.PoetId == poet.PoetId);
         }
+
+        [HttpGet("{name}")]
+        [ActionName("GetPoemsByAuthorCondition")]
+        public PagedPoems GetPoemsByAuthor(string name, int pagesize, int index, string filter)
+        {
+            var poet = _dbContext.Poets.FirstOrDefault(p => p.Name == name);
+            var Poems = from p in _dbContext.Poems where p.PoetId == poet.PoetId select p;
+            if (!string.IsNullOrEmpty(filter))
+            {
+                Poems = from p in Poems where p.Title.Contains(filter) select p;
+            }
+
+            var ps = pagesize;
+            if (ps <= 0)
+            {
+                ps = 50;
+            }
+
+            PagedPoems res = new PagedPoems();
+            res.CurrentPage = index;
+            res.PageSize = ps;
+            res.Total = Poems.Count();
+
+            res.Poems = Poems.Skip(index * ps).Take(ps);
+            return res;
+        }
     }
 }
